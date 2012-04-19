@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE extension SYSTEM "ext-1.0.dtd">
+
+<!--
+***********************************************************************
+/**
+ * @author Tareq Hasan 
+ * @copyright 2009
+ * @url http://tareq.weDevs.com
+ */
+ 
+***********************************************************************
+-->
+
+<extension engine="1.0">
+    <id>bangla_date</id>
+    <title>Bangla Date</title>
+    <version>1.2</version>
+    <description>This extension adds a Bangla Date (Bongabdo) to the forum forum head. e.g (আজ ২৭ চৈত্র ১৪১৫ বাংলা)</description>
+    <author>Tareq Hasan (http://tareq.wedevs.com)</author>
+    <minversion>1.3.2</minversion>
+    <maxtestedon>1.3.2</maxtestedon>
+	
+    <hooks>
+		<hook id="hd_head"><![CDATA[
+		
+				$forum_head['bangla_date'] = '<style type="text/css"> #brd-bnDate {	font-size: 14px; padding-top: 0; padding-bottom: 0; padding-right: 20px; float: right; margin-top: -25px;}  </style>';
+								
+		]]></hook>
+		<hook id="hd_gen_elements"><![CDATA[
+			include $ext_info['path'].'/functions.php';
+			date_default_timezone_set('Asia/Dhaka');
+			$time = time();
+			$engDate = date('d', $time); //makes the date as timestamp
+			$engMonth = date('m', $time);
+			$engYear = date('Y', $time);
+			$engHour = date('G', $time);
+			
+			$banglaConvertdDate = banglaCalender($engHour, $engDate, $engMonth, $engYear);
+			
+			$gen_elements['<!-- forum_desc -->'] = ($forum_config['o_board_desc'] != '') ? '<p id="brd-desc">'.forum_htmlencode($forum_config['o_board_desc']).'</p><span id="brd-bnDate">আজ '.$banglaConvertdDate[0].' '.$banglaConvertdDate[1].' '.$banglaConvertdDate[2].' বাংলা</span>' : '';
+						
+		]]></hook>
+    </hooks>
+</extension>
